@@ -54,6 +54,14 @@ func RealIP(r *http.Request) string {
 	hdrRealIP := hdr.Get("X-Real-Ip")
 	hdrForwardedFor := hdr.Get("X-Forwarded-For")
 
+	if len(hdrForwardedFor) == 0 {
+		hdrForwardedFor = hdr.Get("x-forwarded-for")
+	}
+
+	if len(hdrForwardedFor) == 0 {
+		hdrForwardedFor = hdr.Get("X-FORWARDED-FOR")
+	}
+
 	if len(hdrForwardedFor) == 0 && len(hdrRealIP) == 0 {
 		return ipAddrFromRemoteAddr(r.RemoteAddr)
 	}
